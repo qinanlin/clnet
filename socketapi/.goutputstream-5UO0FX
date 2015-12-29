@@ -1,0 +1,14 @@
+include ../cl.mk
+INCLUDE = .
+CPP = $(wildcard.c)
+OBJ = SocketAPI.o Socket.o
+
+#目标集（All）名字不能与依赖目标集（OBJ）出去后缀的名字相同
+All:$(OBJ)
+
+%.o:%.cpp
+	$(CC) -g -c -I$(INCLUDE) $<
+
+.PHONY:clean
+clean:
+	-rm *.o

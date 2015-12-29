@@ -1,0 +1,9 @@
+CC = g++
+PROJECTDIR = /mnt/sharefile/src
+COMMON = $(PROJECTDIR)/common
+SOCKETAPI = $(PROJECTDIR)/socketapi
+SERVERBASE = $(PROJECTDIR)/server/serverbase
+SHAREMEM = $(PROJECTDIR)/sharemem
+SHMCHANNEL = $(PROJECTDIR)/shmchannel
+LOGSVR = $(PROJECTDIR)/logsvr
+LOGAPI = $(PROJECTDIR)/logapi
