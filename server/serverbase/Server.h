@@ -10,7 +10,6 @@ class Server
 {
 public:
 	Server(){};
-	Server(int iStream, int iPort);
 	
 	virtual ~Server();
 	
@@ -24,8 +23,6 @@ protected:
 	virtual int Loop(){};
 	void ListenSignal();
 	void SetDaemon();
-protected:
-	ServerSocket *m_pstSerSock;
 };
 
 #endif

@@ -1,0 +1,32 @@
+package CSMSGPKG;
+
+message Test1{
+	required string str = 1;
+	required int32 num = 2;
+}
+
+
+message repTe2{
+	required int32 num = 1;
+}
+message Test2{
+	required bool b = 1;
+	required double d = 2;
+	repeated repTe2 f = 3;
+}
+
+enum CSMsgCmd{			//主协议Cmd
+	CMD_TEST1 = 1;
+	CMD_TEST2 = 2;
+}
+
+message CSBody{
+	optional Test1 te1 = 1;		//序列号与CSMsgCmd里的宏对应
+	optional Test2 te2 = 2;
+}
+
+message CSMsg{					//主协议
+	required int32 Ver = 1;
+	required CSMsgCmd Cmd = 2;
+	required CSBody Body = 3;
+}

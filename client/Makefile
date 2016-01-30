@@ -4,8 +4,8 @@ APPNAME=conn_client
 
 SOURCE=$(wildcard *.cpp)
 APPOBJ=$(SOURCE:.cpp=.o)
-INC=-I$(COMMON) -I$(SOCKETAPI)
-LIB=$(SOCKETAPI)/libsocketapi.a
+INC=-I$(COMMON) -I$(SOCKETAPI) -I$(PB)
+LIB=$(SOCKETAPI)/libsocketapi.a $(PB)/libpb.a
 
 .PHONY: all clean
 
@@ -18,7 +18,7 @@ all:$(APPNAME)
 %.o:%.cpp %.d
 	$(CC) -g -c $(INC) $<
 $(APPNAME):$(APPOBJ)
-	$(CC) -o $(APPNAME) $(INC) $^ $(LIB) -lpthread
+	$(CC) -o $(APPNAME) $(INC) $^ $(LIB) `pkg-config --cflags --libs protobuf`
 
 clean:
 	$(RM) *.o *.d

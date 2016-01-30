@@ -9,7 +9,7 @@ ShareMem<Type>::ShareMem()
 template<class Type>
 ShareMem<Type>::~ShareMem()
 {
-	Shm_del();
+	//Shm_del();
 }
 
 template<class Type>

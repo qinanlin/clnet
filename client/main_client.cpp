@@ -1,9 +1,10 @@
-#include "client.h"
+#include "clientsocket.h"
 #include <iostream>
 #include <cstdio>
 #include <unistd.h>
 #include <pthread.h>
 #include <time.h>
+#include "msg.pb.h"
 
 #define MAX_PTHREAD_NUM 1
 
@@ -22,7 +23,7 @@ void write_file(const char *buf, int size, FILE *p)
 void *thread_run(void *arg)
 {
 	
-	Client cl(SOCK_STREAM);
+	ClientSocket cl;
 	pid_t pid = getpid();
 	char SendBuf[32] = {0};
 	char RecvBuf[64] = {0};
@@ -30,47 +31,67 @@ void *thread_run(void *arg)
 	char IpAddr[32] = "127.0.0.1";
 	int iRet;
 	FILE *stream;
-	int fd = cl.m_pstSocket->m_iSocket;
 	char file[32] = {0};
 	int res;
-	fd_set rd;
-	fd_set test;
-	FD_ZERO(&rd);
-	FD_ZERO(&test);
-	FD_SET(fd, &rd);
 
-	sprintf(SendBuf, "client : %d", pid);
-	//sprintf(file, "log/client_%d", pid);
-
-	/*if((stream = fopen(file, "a+")) == NULL)
+	if(false == cl.Init(SOCK_STREAM))
 	{
-		std::cout<<"open faile" << std::endl;
+		std::cout<< "Init failed" << std::endl;
 		pthread_exit(0);
-	}*/
-
-	//cl.m_pstSocket->SetNonBlocking(1);
+	}
+	
+	sprintf(SendBuf, "client : %d", pid);
 
 	
 	
 	if(false == cl.Connect(9411, IpAddr))
 	{
 		std::cout<< "Connect failed" << std::endl;
-		//fwrite( "conn failed" , sizeof("conn failed"), 1, stream);
-		//fclose(stream);
-		pthread_exit(0);
+		//pthread_exit(0);
 	}
 	
 	char buf[1024] = {0};
 	char data[128] = {0};
 
-	//write_file(buf, sizeof(buf), stream);
-	/*fwrite(buf, sizeof(buf), 1, stream);
-	fflush(stream);*/
+	CSMSGPKG::CSMsg clMsg;
+	clMsg.set_ver(10);
+	clMsg.set_cmd(CSMSGPKG::CMD_TEST1);
+
+	CSMSGPKG::CSBody *pBody = clMsg.mutable_body();
+	CSMSGPKG::Test1 *pTe1 = pBody->mutable_te1();
+	pTe1->set_str("hello protocol buffer");
+	pTe1->set_num(10086);
+
+	CSMSGPKG::Test2 *pTe2 = pBody->mutable_te2();
+	pTe2->set_b(false);
+	pTe2->set_d(3.1415926);
+	pTe2->add_f()->set_num(1.0);
+	pTe2->add_f()->set_num(2.0);
+	pTe2->add_f()->set_num(3.0);
+	int length = clMsg.ByteSize();
+	clMsg.SerializeToArray(SendBuf, length);
+	
+
+	CSMSGPKG::CSMsg clte;
+	clte.ParseFromArray(SendBuf, length);
+	std::cout<< "ver = " << clte.ver() << std::endl;
+	std::cout<< "cmd = " << clte.cmd()<< std::endl;
+	std::cout<< clte.body().te1().str().c_str()<<std::endl;
+	std::cout<< clte.body().te1().num() << std::endl;
+	
+		//char *str = "hello world";
+		iRet = cl.SendMsg(SendBuf, length);
+		if(0 >= iRet)
+		{
+			std::cout<< "send failed" << std::endl;
+		}
+		std::cout<< iRet << std::endl;
+		if(0)
 		{
 			short iLen = 0;
 			short iHLen = 0;
 			int iOff = 0;
-			int iRet = 0;
+			
 
 			char realdata[128] = {0};
 			strcpy(data, "hey gilrs");

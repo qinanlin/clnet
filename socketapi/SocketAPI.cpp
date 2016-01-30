@@ -70,7 +70,7 @@ bool SocketAPI::listen_cl(int iFd, int iBacklog)
 
 int SocketAPI::close_cl(int iFd)
 {
-	::close(iFd);
+	return ::close(iFd);
 }
 
 bool SocketAPI::connect_cl(int iFd, const struct sockaddr *pstAdd, size_t iLen)

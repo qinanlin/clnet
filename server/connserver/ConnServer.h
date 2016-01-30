@@ -26,7 +26,7 @@ public:
 	int ConnSend();
 	bool AddConn();
 	bool DelConn(ConnInfo &);
-	bool ParseBuff(ConnInfo &);
+	bool ForwardBuff(ConnInfo &);
 	int GetMsgLen(ConnInfo *);
 	
 public:
@@ -35,7 +35,8 @@ public:
 	ConnEpoll *m_pstEpoll;
 private:
 	LogApi m_cLogApi;
-	//ServerSocket *pstServerSocket;
+	ShmChannel m_cChannel;
+	ServerSocket *m_pstSerSock;
 };
 
 #endif

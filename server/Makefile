@@ -1,7 +1,7 @@
 include ../cl.mk
 
 MAKE = make
-SUBDIR= serverbase connserver
+SUBDIR= serverbase connserver logicserver
 
 SUBCLEAN =$(patsubst %, %.clean, $(SUBDIR))
 

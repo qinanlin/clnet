@@ -7,3 +7,6 @@ SHAREMEM = $(PROJECTDIR)/sharemem
 SHMCHANNEL = $(PROJECTDIR)/shmchannel
 LOGSVR = $(PROJECTDIR)/logsvr
 LOGAPI = $(PROJECTDIR)/logapi
+MYSQL = /usr/local/mysql/include/
+MYSQLLIB = /usr/local/mysql/lib
+PB = $(PROJECTDIR)/pb

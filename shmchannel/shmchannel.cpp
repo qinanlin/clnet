@@ -150,7 +150,7 @@ bool ShmChannel::SC_send(char *pSendbuf, int iLen)  //有六种情况
 		}
 	}
 
-	SC_sendchan_check();
+	//SC_sendchan_check();
 
 	return true;
 }
@@ -219,7 +219,7 @@ int ShmChannel::SC_recv(char *pRecvbuf, int iLen)	//有三种情况, iLen为pRecvbuf长
 		}
 	}
 
-	SC_recvchan_check();
+	//SC_recvchan_check();
 	
 	return iSize - CHANNEL_MSG_LEN;
 }

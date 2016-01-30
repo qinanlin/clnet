@@ -1,11 +1,11 @@
 include ../../cl.mk
 
-APPNAME=server
+APPNAME=lgcsvr
 
 SOURCE=$(wildcard *.cpp)
 APPOBJ=$(SOURCE:.cpp=.o)
 INC=-I$(COMMON) -I$(SOCKETAPI) -I$(SERVERBASE) -I$(LOGAPI) -I$(SHMCHANNEL) -I$(SHAREMEM) -I$(PB)
-LIB=$(SOCKETAPI)/libsocketapi.a $(SERVERBASE)/libserversocket.a $(SHAREMEM)/libsharemem.a $(LOGAPI)/liblogapi.a $(SHMCHANNEL)/libshmchannel.a $(PB)/libpb.a
+LIB=$(SERVERBASE)/libserversocket.a $(SHAREMEM)/libsharemem.a $(LOGAPI)/liblogapi.a $(SHMCHANNEL)/libshmchannel.a $(PB)/libpb.a
 #OBJ = $(patsubst %,%.o,$(SOURCE))
 
 .PHONY:all clean

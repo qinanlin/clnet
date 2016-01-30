@@ -2,6 +2,9 @@
 #include "ConnInfo.h"
 #include <cstdio>
 #include <iostream>
+#include "msg.pb.h"
+#include <google/protobuf/repeated_field.h>
+//namespace google::protobuf;
 
 
 /*ConnServer::ConnServer(unsigned int iSize)
@@ -26,6 +29,11 @@ bool ConnServer::Init(unsigned int iSize, int iPort)
 	
 	/*iStream = SOCK_STREAM;
 	iPort = 9411;*/
+	if(false == m_cChannel.SC_load(123450, 123451))
+	{
+		std::cout<< "sc_load error"<<std::endl;
+		return false;
+	}
 
 	//attach share memory?
 	iSize = this->m_uiSize;
@@ -169,7 +177,7 @@ int ConnServer::GetMsgLen(ConnInfo *pstInfo)
 	return pstInfo->m_iMsgLen;
 }
 
-bool ConnServer::ParseBuff(ConnInfo &stConnInfo)
+bool ConnServer::ForwardBuff(ConnInfo &stConnInfo)
 {
 	
 	//memset(stConnInfo.m_pRecvBuff, 0, sizeof(uiLen) + PROTO_MSG_LENTH);
@@ -177,13 +185,31 @@ bool ConnServer::ParseBuff(ConnInfo &stConnInfo)
 	unsigned int uiRealPkgLen = stConnInfo.m_iMsgLen - PROTO_MSG_LENTH;		//协议真实长度
 
 	//test
-	std::cout<<"Client " << stConnInfo.GetSocket()->m_iSocket << ":" ;
-	std::cout<< "pszBuff :" << pszBuff <<std::endl;
-	//test end
-
-
+	if(false == m_cChannel.SC_send(pszBuff, uiRealPkgLen))
+	{
+		std::cout<<"send failed"<< std::endl;
+		return false;
+	}
 	
-	//protobuf parser and send to logic svr
+	std::cout<<"Client " << stConnInfo.GetSocket()->m_iSocket << std::endl;
+	//std::cout << pszBuff <<std::endl;
+
+	CSMSGPKG::CSMsg clte;
+	clte.ParseFromArray(pszBuff, uiRealPkgLen);
+	std::cout<< "ver = " << clte.ver() << std::endl;
+	std::cout<< "cmd = " << clte.cmd()<< std::endl;
+	std::cout<< clte.body().te1().str().c_str()<<std::endl;
+	std::cout<< clte.body().te1().num() << std::endl;
+	std::cout<< uiRealPkgLen << std::endl;
+
+	std::cout<< clte.body().te2().b() << std::endl;
+	std::cout<< clte.body().te2().d() << std::endl;
+	
+	std::cout<< clte.body().te2().f_size() << std::endl;
+	std::cout<<  clte.body().te2().f(0).num() << std::endl;
+	std::cout<<  clte.body().te2().f(1).num() << std::endl;
+	std::cout<<  clte.body().te2().f(2).num() << std::endl;
+	//test end
 	return true;
 }
 
@@ -248,7 +274,7 @@ int ConnServer::RecvProc(int iFd)
 		
 		while(pstConnInfo->m_iData >= pstConnInfo->m_iMsgLen)
 		{
-			bRet = ParseBuff(*pstConnInfo);
+			bRet = ForwardBuff(*pstConnInfo);
 
 			if(bRet)
 			{

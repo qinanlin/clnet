@@ -5,18 +5,9 @@
 #include <cstdlib>
 #include <signal.h>
 
-Server::Server(int iStream, int iPort)
-{
-	m_pstSerSock = new ServerSocket(iStream, iPort);
-	if(!m_pstSerSock)
-	{
-		throw 1;
-	}
-}
 	
 Server::~Server()
 {
-	SAFE_DELETE(m_pstSerSock)
 }
 
 void Server::ListenSignal()
@@ -97,14 +88,12 @@ void Server::SetDaemon()
 	}
 
 
-	//
 	fd0 = open("/dev/null", O_RDWR);
 	fd1 = dup(0);
 	fd2 = dup(0);
 
 	if(fd0 != 0 || fd1 != 1 || fd2 != 2)
 	{
-		//std::cout
 		exit(1);
 	}
 }
@@ -119,13 +108,13 @@ void Server::MainLoop()
 		
 		iBusy = Loop();
 
-		if(iBusy)   //busy
+		if(iBusy)
 		{
-			usleep(2000000);
+			usleep(200000);
 		}
 		else
 		{
-			usleep(1000000);
+			usleep(100000);
 		}
 		
 		Tick(iBusy);

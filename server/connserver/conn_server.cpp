@@ -8,16 +8,16 @@ int main()
 	stServer.MainLoop();
 	stServer.Exit();
 	#endif
-	Server *pstServer = new ConnServer;
+	Server *pServer = new ConnServer;
 	
-	pstServer->ServerOpt();
+	pServer->ServerOpt();
 	
-	pstServer->Init(5120, 9411);
+	pServer->Init(5120, 9411);
 	
-	pstServer->MainLoop();
+	pServer->MainLoop();
 	
-	pstServer->Exit();
+	pServer->Exit();
 
-	SAFE_DELETE(pstServer)
+	SAFE_DELETE(pServer)
 	return 0;
 }
